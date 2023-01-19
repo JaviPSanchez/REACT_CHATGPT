@@ -1,15 +1,19 @@
 import express from "express";
-import {} from "dotenv/config";
+import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import cors from "cors";
+
 const app = express();
 const port = 3001;
+dotenv.config();
+
+//Middlewares
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["http://localhost:3000", "http://localhost:3001"],
   })
 );
 
@@ -22,12 +26,12 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.post("/", async (req, res) => {
-  const { message, currentModel } = req.body;
-  console.log(message);
+  const { message, selected, tokens } = req.body;
+  console.log(req.body);
   const response = await openai.createCompletion({
-    model: `${currentModel}`,
+    model: `${selected}`,
     prompt: `${message}`,
-    max_tokens: 100,
+    max_tokens: tokens,
     temperature: 0.5,
   });
 
@@ -38,7 +42,6 @@ app.post("/", async (req, res) => {
 
 app.get("/models", async (req, res) => {
   const response = await openai.listEngines();
-  console.log(response.data.data);
   res.json({ models: response.data.data });
 });
 
