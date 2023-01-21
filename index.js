@@ -26,13 +26,14 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 app.post("/", async (req, res) => {
-  const { message, selected, tokens } = req.body;
+  const { message, selected, tokens, temperature } = req.body;
   console.log(req.body);
+
   const response = await openai.createCompletion({
     model: `${selected}`,
     prompt: `${message}`,
     max_tokens: tokens,
-    temperature: 0.5,
+    temperature: parseFloat(temperature.checked),
   });
 
   res.json({

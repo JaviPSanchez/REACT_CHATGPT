@@ -14,6 +14,9 @@ export default function App() {
   const [inputModel, setInputModel] = useState("");
   const [chatLog, setChatLog] = useState([]);
   const [tokens, setTokens] = useState("");
+  const [temperature, setTemperature] = useState({
+    checked: 0,
+  });
 
   useEffect(() => {
     getEngines();
@@ -32,6 +35,7 @@ export default function App() {
         message: messages,
         selected,
         tokens,
+        temperature,
       }),
     });
     const data = await response.json();
@@ -47,7 +51,7 @@ export default function App() {
     fetch("http://localhost:3001/models")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data.models);
+        // console.log(data.models);
         setModels(data.models);
       });
   }
@@ -150,6 +154,43 @@ export default function App() {
               }}
             />
           </form>
+        </div>
+        <div className="mt-4">
+          <h6 className="text-white my-4">Temperature:</h6>
+          <div className="w-full flex items-center justify-between font-medium h-fit text-white p-4 border rounded-lg text-left  hover:bg-stone-700 transition-all">
+            <label className="text-white flex items-center hover:cursor-pointer">
+              <input
+                type="radio"
+                value="0"
+                checked={temperature.checked === "0"}
+                className="w-6 h-6 mr-4 hover:cursor-pointer"
+                onChange={(e) => setTemperature({ checked: e.target.value })}
+              />
+              0
+            </label>
+
+            <label className="text-white flex items-center hover:cursor-pointer">
+              <input
+                type="radio"
+                value="0.5"
+                checked={temperature.checked === "0.5"}
+                className="w-6 h-6 mr-4 hover:cursor-pointer"
+                onChange={(e) => setTemperature({ checked: e.target.value })}
+              />
+              0.5
+            </label>
+
+            <label className="text-white flex items-center hover:cursor-pointer">
+              <input
+                type="radio"
+                value="1"
+                checked={temperature.checked === "1"}
+                className="w-6 h-6 mr-4 hover:cursor-pointer"
+                onChange={(e) => setTemperature({ checked: e.target.value })}
+              />
+              1
+            </label>
+          </div>
         </div>
       </aside>
       <section className="w-5/6 h-screen bg-[#343541] flex flex-col justify-center text-white">
